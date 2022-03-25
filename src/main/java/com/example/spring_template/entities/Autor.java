@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tb_autores")
@@ -22,7 +23,7 @@ public class Autor implements Serializable {
     public Autor(){
     }
 
-    public Autor(String name, Integer age) {
+    public Autor(String name) {
         this.name = name;
     }
 
@@ -36,6 +37,14 @@ public class Autor implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Livro> getLivros() {
+        return livros.stream().sorted().collect(Collectors.toSet());
+    }
+
+    public void setLivro(Livro livro) {
+        livros.add(livro);
     }
 
     @Override

@@ -1,11 +1,10 @@
 package com.example.spring_template.entities;
 
-import com.example.spring_template.entities.enums.Disponibilidade;
 import com.example.spring_template.entities.enums.Genero;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Calendar;
 
 @Entity
 @Table(name = "tb_livros")
@@ -19,18 +18,40 @@ public class Livro implements Serializable {
 
     @ManyToOne
     private Autor autor;
-    private Disponibilidade disponibilidade;
+    private String disponibilidade;
     private Genero genero;
-    private Date lancamento;
+    private Calendar lancamento = Calendar.getInstance();
 
-    public Livro(){
+    public Livro() {
     }
 
-    public Livro(Autor autor, Disponibilidade disponibilidade, Genero genero, Date lancamento){
+    public Livro(String name, Autor autor, Disponibilidade disponibilidade, Genero genero, int anoLancamento) {
+        this.name = name;
         this.autor = autor;
-        this.disponibilidade = disponibilidade;
+        this.disponibilidade = disponibilidade.stringValue();
         this.genero = genero;
-        this.lancamento = lancamento;
+        lancamento.set(Calendar.YEAR, anoLancamento);
+    }
+
+    public enum Disponibilidade {
+        DISPONIBLE(1),
+        INDISPONIBLE(0);
+
+        private int value;
+
+        Disponibilidade(int value) {
+            this.value = value;
+        }
+
+        public String stringValue() {
+            switch (value) {
+                case 0:
+                    return "Indisponível";
+                case 1:
+                    return "Disponível";
+            }
+            return "";
+        }
     }
 
     public Long getId() {
@@ -53,12 +74,12 @@ public class Livro implements Serializable {
         this.autor = autor;
     }
 
-    public Disponibilidade getDisponibilidade() {
+    public String getDisponibilidade() {
         return disponibilidade;
     }
 
     public void setDisponibilidade(Disponibilidade disponibilidade) {
-        this.disponibilidade = disponibilidade;
+        this.disponibilidade = disponibilidade.stringValue();
     }
 
     public Genero getGenero() {
@@ -69,11 +90,11 @@ public class Livro implements Serializable {
         this.genero = genero;
     }
 
-    public Date getLancamento() {
+    public Calendar getLancamento() {
         return lancamento;
     }
 
-    public void setLancamento(Date lancamento) {
+    public void setLancamento(Calendar lancamento) {
         this.lancamento = lancamento;
     }
 }
