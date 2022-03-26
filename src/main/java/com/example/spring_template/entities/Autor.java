@@ -1,5 +1,7 @@
 package com.example.spring_template.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -17,6 +19,7 @@ public class Autor implements Serializable {
     private Long id;
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "autor")
     private Set<Livro> livros = new HashSet<>();
 

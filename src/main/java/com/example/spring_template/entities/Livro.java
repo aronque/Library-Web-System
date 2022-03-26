@@ -14,10 +14,13 @@ public class Livro implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(length = 75)
     private String name;
 
     @ManyToOne
     private Autor autor;
+    @Column(length = 12)
     private String disponibilidade;
     private Genero genero;
     private Calendar lancamento = Calendar.getInstance();

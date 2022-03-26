@@ -1,14 +1,11 @@
 package com.example.spring_template.resources;
 
-import com.example.spring_template.entities.Autor;
 import com.example.spring_template.entities.Livro;
-import com.example.spring_template.entities.enums.Genero;
-import com.example.spring_template.mock.MockData;
+import com.example.spring_template.repositories.LivrosRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,15 +13,31 @@ import java.util.List;
 @RequestMapping("/livros")
 public class LivroResource {
 
+    @Autowired
+    private LivrosRepository repository;
+
     @GetMapping("/{id}")
-    ResponseEntity<Livro> findLivro(@PathVariable int id) {
-        return ResponseEntity.ok(new Livro("Admirável Mundo Novo", new Autor("Huxley") , Livro.Disponibilidade.DISPONIBLE, Genero.DYSTOPIA, 1932));
+    ResponseEntity<Livro> findLivro(@PathVariable Long id) {
+        Livro livro = repository.getById(id);
+        return ResponseEntity.ok(livro);
     }
 
     @GetMapping("")
     ResponseEntity<List<Livro>> findAll() {
-        List<Livro> list = MockData.getLivros();
+        List<Livro> list = repository.findAll();
         return ResponseEntity.ok(list);
+    }
+
+    @PostMapping("/insert")
+    public ResponseEntity<Livro> insertLivro(@RequestBody Livro livro) {
+        Livro livroAux = null;
+        try {
+            livroAux = repository.save(livro);
+            return new ResponseEntity<>(livroAux, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(livroAux, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
